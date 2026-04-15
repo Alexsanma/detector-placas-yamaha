@@ -187,6 +187,7 @@ El sistema tiene dos componentes: API backend y frontend Streamlit. Puedes corre
 
 **Terminal 1 — Backend:**
 ```bash
+cd detector-placas-yamaha
 conda activate detector_placas
 uvicorn main:app --reload
 ```
@@ -195,6 +196,7 @@ Disponible en `http://127.0.0.1:8000` · Documentación Swagger en `/docs`.
 
 **Terminal 2 — Streamlit:**
 ```bash
+cd detector-placas-yamaha
 conda activate detector_placas
 streamlit run streamlit_app.py
 ```
