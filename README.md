@@ -6,6 +6,56 @@ Sistema de control de acceso vehicular basado en visión por computadora. Detect
 Prueba técnica para el rol de **Auxiliar de Nuevas Tecnologías** — División de TI, Incolmotos Yamaha.
 
 ---
+## Cobertura de tareas requeridas
+
+<table>
+  <tr>
+    <th>#</th>
+    <th>Tarea</th>
+    <th>Dónde está</th>
+  </tr>
+  <tr>
+    <td>1</td>
+    <td><strong>Preprocesamiento de datos</strong> — exploración, limpieza, validación de anotaciones, conversión de formatos, división estratificada</td>
+    <td><a href="notebooks/01_exploracion.ipynb">notebooks/01_exploracion.ipynb</a></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td><strong>Entrenamiento del modelo</strong> — YOLOv8 + EasyOCR, 3 versiones entrenadas y comparadas</td>
+    <td><a href="notebooks/02_entrenamiento.ipynb">notebooks/02_entrenamiento.ipynb</a></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td><strong>Mejora de robustez</strong> — data augmentation documentado (hsv, mosaic, erasing, rotación, copy-paste)</td>
+    <td><a href="notebooks/02_entrenamiento.ipynb">notebooks/02_entrenamiento.ipynb</a></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td><strong>Evaluación</strong> — métricas completas en test (mAP50, mAP50-95, Precision, Recall) por clase</td>
+    <td><a href="notebooks/02_entrenamiento.ipynb">notebooks/02_entrenamiento.ipynb</a></td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td><strong>Lógica de negocio</strong> — clasificación ingreso/salida, visitante/registrado/desconocido con reglas de dominio puras</td>
+    <td><a href="src/domain/">src/domain/</a></td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td><strong>Buenas prácticas</strong> — arquitectura hexagonal, SOLID, excepciones de dominio, código documentado</td>
+    <td><a href="src/">src/</a></td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td><strong>Bonus: persistencia y trazabilidad</strong> — eventos con placa, fecha, tipo, confianza y cámara en SQLite</td>
+    <td><a href="src/infrastructure/adapters/output/persistence/">src/infrastructure/.../persistence/</a></td>
+  </tr>
+  <tr>
+    <td>—</td>
+    <td><strong>Preguntas de razonamiento (30%) y pregunta abierta (10%)</strong></td>
+    <td><a href="#respuestas-a-preguntas-de-razonamiento">Ver respuestas</a></td>
+  </tr>
+</table>
+---
 
 ## Tabla de contenidos
 
@@ -20,6 +70,7 @@ Prueba técnica para el rol de **Auxiliar de Nuevas Tecnologías** — División
 9. [Respuestas a preguntas de razonamiento](#respuestas-a-preguntas-de-razonamiento)
 10. [Evidencias](#evidencias)
 11. [Limitaciones encontradas](#limitaciones-encontradas)
+12. [Mejoras Futuras](#mejoras-futuras)
 12. [Estructura del proyecto](#estructura-del-proyecto)
 
 ---
@@ -385,6 +436,18 @@ Entrenamiento de 3 modelos YOLO, técnicas de data augmentation, evaluación con
 4. **Formato único:** el pipeline asume formato colombiano (`AAA000` carros / `AAA00A` motos). Placas de otros países no se reconocerían correctamente.
 5. **Una sola placa por imagen:** el caso de uso selecciona la detección con mayor confianza. Si hay múltiples vehículos en la misma imagen, solo procesa uno.
 
+---
+## Mejoras futuras
+
+- **Modelo OCR específico de placas colombianas** — entrenar una CRNN sobre un dataset dedicado de placas colombianas eliminaría las confusiones V→J y O→0 que el OCR genérico no resuelve.
+- **Procesamiento de video en tiempo real (RTSP)** — integrar streams de cámaras IP con ensemble de frames: leer la misma placa en N frames consecutivos y elegir la lectura más frecuente para compensar blur y reflejos transitorios.
+- **Detección de múltiples placas por imagen** — el caso de uso actual selecciona la detección con mayor confianza. Con tracking entre frames se podrían procesar múltiples vehículos simultáneos.
+- **Modelo de corrección contextual más robusto** — las correcciones actuales solo aplican a zonas numéricas (posiciones 3-4). Un clasificador entrenado sobre la tipografía específica de placas colombianas resolvería confusiones en la zona de letras.
+- **Dashboard analítico** — estadísticas de acceso: horarios pico, placas recurrentes, vehículos con accesos anómalos, tasa de detecciones fallidas por hora.
+- **Migración a PostgreSQL + Redis** — PostgreSQL para alta concurrencia en producción, Redis para cachear el último evento de cada placa y evitar queries repetitivas en la lógica de ingreso/salida.
+- **Tests de integración end-to-end** — cubrir el flujo completo con pytest + adaptadores in-memory, sin dependencia de GPU ni BD real.
+- **Exportación del modelo a TensorRT** — cuantización FP16 para despliegue en dispositivos edge (Jetson) con 2-4x de aceleración y consumo reducido de VRAM.
+- **Alertas automáticas** — notificaciones por webhook o correo cuando se detecte una placa con accesos fuera de horario, placas no registradas con alta frecuencia, o caída sostenida de la confianza del modelo.
 ---
 
 ## Estructura del proyecto
