@@ -243,7 +243,25 @@ Lista el historial completo de eventos ordenado por fecha descendente.
 
 ## Decisiones técnicas
 
-### 1. Selección del modelo de detección: v1 sobre v2 o v3
+---
+### 1. Preprocesamiento y exploración del dataset
+
+El dataset original de Roboflow contenía 281 imágenes con un problema no documentado: las anotaciones mezclaban dos formatos distintos — 154 en formato estándar YOLOv8 (5 datos por línea) y 137 en formato polígono (9-13 datos). Sin conversión, YOLO no podía entrenar correctamente.
+
+**Decisiones tomadas:**
+- Dataset original preservado intacto en `data/raw/` — los labels procesados viven en `data/processed/`
+- 137 anotaciones en formato polígono convertidas a bounding box calculando el rectángulo mínimo que contiene el polígono
+- Redimensionamiento y normalización delegados a YOLO internamente — aplica letterboxing (mantiene proporción + padding) en lugar de resize directo para evitar distorsión
+- División estratificada en `data/splits/`: imágenes con una sola placa divididas 70/20/10 por clase, imágenes con múltiples placas e imágenes mixtas distribuidas manualmente para garantizar representación en todos los splits
+
+**Resultado:** 195 train · 56 valid · 31 test
+
+**Observación relevante:** el dataset tiene un desbalance de clases notable — 248 anotaciones de `placa_carro` vs 43 de `placa_moto`. Esto impacta directamente el rendimiento del modelo en motos, como se confirma en las métricas de test (93.4% vs 70.9% de mAP50).
+
+Proceso completo documentado en [`notebooks/01_exploracion.ipynb`](notebooks/01_exploracion.ipynb).
+---
+
+### 2. Selección del modelo de detección: v1 sobre v2 o v3
 
 Se entrenaron tres versiones del detector YOLO. Tras comparar métricas sobre el set de **test**:
 
@@ -325,23 +343,23 @@ Se selecciona **V1 como modelo definitivo** por las siguientes razones:
 
 los modelos v2 y v3 se conservan en el repositorio como una evidencia del proceso iterativo y a su vez como un punto de comparición técnica 
 
-### 2. Stack de visión
+### 3. Stack de visión
 
 - **YOLOv8 (Ultralytics):** balance óptimo entre precisión, velocidad y facilidad de entrenamiento. Comunidad activa y documentación sólida.
 - **EasyOCR:** OCR genérico pero robusto, funciona razonablemente bien sin fine-tuning específico de placas. Alternativa evaluada: PaddleOCR (mejor rendimiento teórico pero mayor complejidad de instalación).
 
-### 3. Persistencia con SQLAlchemy 2.0
+### 4. Persistencia con SQLAlchemy 2.0
 
 SQLite fue elegido por simplicidad: no requiere servidor, la base se crea sola, y el archivo `.db` es portable. Para producción, bastaría cambiar el `database_url` en `.env` a PostgreSQL sin tocar ni una línea de los repositorios (gracias a SQLAlchemy).
 
-### 4. Dos implementaciones del repositorio
+### 5. Dos implementaciones del repositorio
 
 - `SqliteRepository`: persistencia real vía SQLAlchemy.
 - `InMemoryRepository`: almacenamiento volátil en `dict`. Útil para tests rápidos y demos sin BD.
 
 Se intercambian cambiando una variable de entorno (`USAR_BASE_DATOS`).
 
-### 5. Valor por defecto para cámara
+### 6. Valor por defecto para cámara
 
 El `camera_id` tiene un default configurable (`CAMARA_POR_DEFECTO` en `.env`). Esto evita peticiones inválidas en pruebas manuales y refleja un caso real de una sola cámara por punto de acceso.
 
@@ -349,36 +367,85 @@ El `camera_id` tiene un default configurable (`CAMARA_POR_DEFECTO` en `.env`). E
 
 ## Métricas del modelo
 
-**Modelo seleccionado: v1** 
+**Modelo seleccionado: v1** — YOLOv8n, 50 épocas, imgsz=416, Transfer Learning desde yolov8n.pt.
 
+### Validación
 ---
 <table>
   <tr>
     <th>Métrica</th>
-    <th>Valor</th>
+    <th>General</th>
+    <th>placa_carro</th>
+    <th>placa_moto</th>
   </tr>
   <tr>
     <td>mAP50</td>
-    <td>82.1%</td>
+    <td>97.4%</td>
+    <td>99.0%</td>
+    <td>95.9%</td>
   </tr>
   <tr>
     <td>mAP50-95</td>
-    <td>69.3%</td>
+    <td>78.5%</td>
+    <td>73.9%</td>
+    <td>83.1%</td>
   </tr>
   <tr>
     <td>Precision</td>
-    <td>81.8%</td>
+    <td>86.6%</td>
+    <td>82.6%</td>
+    <td>90.7%</td>
   </tr>
   <tr>
     <td>Recall</td>
-    <td>79.8%</td>
+    <td>100%</td>
+    <td>100%</td>
+    <td>100%</td>
   </tr>
 </table>
 ---
 
-Detalles adicionales en `evidencias/metrics_report.md` y notebooks en `notebooks\02_entrenamiento.ipynb`.
+### Test (conjunto nunca visto durante el entrenamiento)
 
+<table>
+  <tr>
+    <th>Métrica</th>
+    <th>General</th>
+    <th>placa_carro</th>
+    <th>placa_moto</th>
+  </tr>
+  <tr>
+    <td>mAP50</td>
+    <td>82.1%</td>
+    <td>93.4%</td>
+    <td>70.9%</td>
+  </tr>
+  <tr>
+    <td>mAP50-95</td>
+    <td>69.3%</td>
+    <td>75.8%</td>
+    <td>62.8%</td>
+  </tr>
+  <tr>
+    <td>Precision</td>
+    <td>81.8%</td>
+    <td>84.8%</td>
+    <td>78.9%</td>
+  </tr>
+  <tr>
+    <td>Recall</td>
+    <td>79.8%</td>
+    <td>92.9%</td>
+    <td>66.7%</td>
+  </tr>
+</table>
 ---
+
+El modelo alcanzó un mAP50 de 82.1% en el conjunto de test, lo que demuestra una adecuada capacidad de generalización ante datos no vistos. La caída respecto a validación (97.4% → 82.1%) es esperada dado el tamaño reducido del dataset (195 imágenes de entrenamiento) y representa un leve overfitting controlado.
+
+El modelo es especialmente confiable en la detección de `placa_carro` (mAP50: 93.4%), mientras que `placa_moto` presenta menor rendimiento (70.9%) — atribuible directamente al desbalance del dataset: 248 anotaciones de carro vs 43 de moto.
+
+Detalles completos en [`evidencias/metrics_report.md`](evidencias/metrics_report.md) y [`notebooks/02_entrenamiento.ipynb`](notebooks/02_entrenamiento.ipynb).
 
 ## Proceso iterativo del OCR
 
