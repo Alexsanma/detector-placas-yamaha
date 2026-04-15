@@ -403,6 +403,7 @@ El `camera_id` tiene un default configurable (`CAMARA_POR_DEFECTO` en `.env`). E
     <td>100%</td>
   </tr>
 </table>
+
 ---
 
 ### Test (conjunto nunca visto durante el entrenamiento)
@@ -439,6 +440,7 @@ El `camera_id` tiene un default configurable (`CAMARA_POR_DEFECTO` en `.env`). E
     <td>66.7%</td>
   </tr>
 </table>
+
 ---
 
 El modelo alcanzó un mAP50 de 82.1% en el conjunto de test, lo que demuestra una adecuada capacidad de generalización ante datos no vistos. La caída respecto a validación (97.4% → 82.1%) es esperada dado el tamaño reducido del dataset (195 imágenes de entrenamiento) y representa un leve overfitting controlado.
