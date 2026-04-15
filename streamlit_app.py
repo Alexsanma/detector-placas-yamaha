@@ -53,7 +53,7 @@ if seccion == "Detectar placa":
         camera_id = st.number_input("ID de cámara (opcional)", min_value=1, value=1, step=1)
 
         if imagen_subida is not None:
-            st.image(imagen_subida, caption="Imagen cargada", use_container_width=True)
+            st.image(imagen_subida, caption="Imagen cargada", width='stretch')
 
     with col_der:
         if imagen_subida is not None and st.button("Procesar detección", type="primary"):
