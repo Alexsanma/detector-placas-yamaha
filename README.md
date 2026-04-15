@@ -61,17 +61,18 @@ Prueba técnica para el rol de **Auxiliar de Nuevas Tecnologías** — División
 
 1. [Stack tecnológico](#stack-tecnológico)
 2. [Arquitectura](#arquitectura)
-3. [Instalación](#instalación)
-4. [Ejecución](#ejecución)
-5. [Uso de la API](#uso-de-la-api)
-6. [Decisiones técnicas](#decisiones-técnicas)
-7. [Métricas del modelo](#métricas-del-modelo)
-8. [Proceso iterativo del OCR](#proceso-iterativo-del-ocr)
-9. [Respuestas a preguntas de razonamiento](#respuestas-a-preguntas-de-razonamiento)
-10. [Evidencias](#evidencias)
-11. [Limitaciones encontradas](#limitaciones-encontradas)
-12. [Mejoras Futuras](#mejoras-futuras)
-12. [Estructura del proyecto](#estructura-del-proyecto)
+3. [Demo en video](#demo-en-video)
+4. [Instalación](#instalación)
+5. [Ejecución](#ejecución)
+6. [Uso de la API](#uso-de-la-api)
+7. [Decisiones técnicas](#decisiones-técnicas)
+8. [Métricas del modelo](#métricas-del-modelo)
+9. [Proceso iterativo del OCR](#proceso-iterativo-del-ocr)
+10. [Respuestas a preguntas de razonamiento](#respuestas-a-preguntas-de-razonamiento)
+11. [Evidencias](#evidencias)
+12. [Limitaciones encontradas](#limitaciones-encontradas)
+13. [Mejoras Futuras](#mejoras-futuras)
+14. [Estructura del proyecto](#estructura-del-proyecto)
 
 ---
 
@@ -141,6 +142,15 @@ USAR_BASE_DATOS=false  # memoria volátil (útil para tests)
 ```
 
 El container lee esta variable y ensambla los adaptadores correspondientes. Ni el dominio ni los casos de uso se enteran del cambio.
+
+---
+## Demo en video
+
+Recorrido por la arquitectura hexagonal, principios SOLID aplicados, demostración del intercambio SQLite ↔ in-memory, y prueba del sistema completo desde Swagger y Streamlit.
+
+[Ver demo en Google Drive](https://drive.google.com/file/d/1c_ekgjh0ngqypjCMujZ7WOk1Tf3Vo_Af/view?usp=drive_link)
+
+---
 
 ## Instalación
 
