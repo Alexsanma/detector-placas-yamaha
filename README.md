@@ -99,7 +99,7 @@ El container lee esta variable y ensambla los adaptadores correspondientes. Ni e
 
 ```bash
 # Clonar el repositorio
-git clone <url-del-repo>
+git clone <https://github.com/Alexsanma/detector-placas-yamaha.git>
 cd detector_placas
 
 # Crear entorno conda
