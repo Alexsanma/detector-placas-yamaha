@@ -142,12 +142,13 @@ USAR_BASE_DATOS=false  # memoria volátil (útil para tests)
 
 El container lee esta variable y ensambla los adaptadores correspondientes. Ni el dominio ni los casos de uso se enteran del cambio.
 
----
 ## Instalación
 
 **Requisitos previos:**
 - [Git](https://git-scm.com/downloads)
-- [Anaconda](https://www.anaconda.com/download) o [Miniconda](https://docs.conda.io/en/latest/miniconda.html)
+- [Miniconda](https://docs.conda.io/en/latest/miniconda.html) o [Anaconda](https://www.anaconda.com/download) — durante la instalación marcar **"Add Miniconda3 to my PATH environment variable"**
+
+> **Nota Windows — PowerShell:** si `conda activate` no funciona, ejecuta `conda init powershell` en una terminal como administrador y reinicia PowerShell. Alternativamente usa **CMD** o **Miniconda Prompt** donde funciona sin configuración adicional.
 
 ```bash
 # 1. Clonar el repositorio
@@ -155,21 +156,22 @@ git clone https://github.com/Alexsanma/detector-placas-yamaha.git
 cd detector-placas-yamaha
 
 # 2. Crear entorno conda
+# (puede pedir aceptar términos de servicio — responde 'a' para continuar)
 conda create -n detector_placas python=3.11
 conda activate detector_placas
 
 # 3. Instalar PyTorch según tu hardware
 # GPU (CUDA 12.1):
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-# CPU:
+# CPU (sin tarjeta NVIDIA):
 pip install torch torchvision
 
 # 4. Instalar el resto de dependencias
 pip install -r requirements.txt
 
 # 5. Configurar variables de entorno
-copy .env.example .env        # Windows
-cp .env.example .env          # Mac/Linux
+copy .env.example .env        # Windows CMD
+cp .env.example .env          # PowerShell / Mac / Linux
 ```
 
 **Nota:** los valores por defecto del `.env` funcionan sin modificar nada para correr el proyecto localmente.
