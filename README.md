@@ -1,4 +1,4 @@
-```markdown
+
 # Detector de Placas Vehiculares
 
 Sistema de control de acceso vehicular basado en visión por computadora. Detecta placas en imágenes, lee los caracteres, clasifica eventos de ingreso/salida y persiste el historial para trazabilidad.
@@ -6,8 +6,6 @@ Sistema de control de acceso vehicular basado en visión por computadora. Detect
 Prueba técnica para el rol de **Auxiliar de Nuevas Tecnologías** — División de TI, Incolmotos Yamaha.
 
 ---
-
-## Tabla de contenidos
 
 ## Tabla de contenidos
 
