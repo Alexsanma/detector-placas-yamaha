@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['placa_carro', 'placa_moto']
+
+roboflow:
+  workspace: alexanders-workspace-jhobc
+  project: alexanders-workspace-jhobc
+  version: dataset
+  license: Private
+  url: https://app.roboflow.com/alexanders-workspace-jhobc/alexanders-workspace-jhobc/dataset

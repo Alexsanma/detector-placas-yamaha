@@ -1,0 +1,72 @@
+# ─── Variables de entorno ───
+.env
+.env.local
+
+# ─── Base de datos local ───
+*.db
+*.sqlite
+*.sqlite3
+
+# ─── Python ───
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+*.egg
+
+# ─── Entornos virtuales ───
+venv/
+env/
+ENV/
+.venv/
+
+# ─── Jupyter ───
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# ─── IDE ───
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Sistema operativo ───
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Dataset (pesado) ───
+data/raw/train/images/*
+data/raw/train/labels/*
+data/processed/train/images/*
+data/processed/train/labels/*
+!data/**/.gitkeep
+
+# ─── Runs de entrenamiento YOLO ───
+models/detector_placas/weights/
+models/detector_placas_v2/weights/
+models/detector_placas_v3/weights/
+models/detector_placas/*.png
+models/detector_placas/*.jpg
+models/detector_placas/*.csv
+models/detector_placas_v2/*.png
+models/detector_placas_v2/*.jpg
+models/detector_placas_v2/*.csv
+models/detector_placas_v3/*.png
+models/detector_placas_v3/*.jpg
+models/detector_placas_v3/*.csv
+
+# ─── EasyOCR (modelos descargados automáticamente) ───
+.EasyOCR/
+
+# ─── Logs ───
+*.log
+
+# ─── Tests y coverage ───
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/

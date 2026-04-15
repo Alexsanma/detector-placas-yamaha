@@ -1,0 +1,7 @@
+names:
+- placa_carro
+- placa_moto
+nc: 2
+test: C:\Users\Alexander\Desktop\Yamaha\detector_placas\data\splits\test\images
+train: C:\Users\Alexander\Desktop\Yamaha\detector_placas\data\splits\train\images
+val: C:\Users\Alexander\Desktop\Yamaha\detector_placas\data\splits\valid\images

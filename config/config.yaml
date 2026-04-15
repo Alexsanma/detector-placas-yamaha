@@ -1,0 +1,33 @@
+# ============================================================
+# CONFIGURACIÓN GLOBAL DEL PROYECTO - DETECTOR DE PLACAS
+# ============================================================
+
+# --- MODELO YOLO ---
+model:
+  architecture: yolov8n.pt  # Arquitectura YOLO 
+  epochs: 50                # Número de épocas de entrenamiento - cuántas veces el modelo ve todo el dataset
+  image_size: 640           # Tamaño al que se redimensionan las imágenes para entrenar (640x640 píxeles)
+  batch_size: 16            # Imágenes procesadas simultáneamente 
+  confidence_threshold: 0.5 # Confianza mínima para considerar una detección válida
+
+# --- DATASET ---
+dataset:
+  raw_path: data/raw              # Ruta al dataset original descargado de Roboflow
+  processed_path: data/processed  # Ruta a las imágenes después de preprocesamiento
+  splits_path: data/splits        # Ruta donde se guardan los conjuntos train/valid/test
+  train_ratio: 0.70               # 70% de las imágenes para entrenamiento
+  valid_ratio: 0.20               # 20% de las imágenes para validación durante el entrenamiento
+  test_ratio: 0.10                # 10% de las imágenes para evaluación final del modelo
+
+# --- OCR (Lectura de caracteres) ---
+ocr:
+  languages: ['es', 'en']  # Idiomas para EasyOCR
+  min_confidence: 0.3      # Confianza mínima del OCR para aceptar un carácter leído
+
+# --- BASE DE DATOS ---
+database:
+  url: sqlite:///eventos.db  # Ruta de la base de datos SQLite (se crea automáticamente al iniciar)
+
+# --- LÓGICA DE NEGOCIO ---
+business:
+  default_camera_id: CAM-001  # cámara por defecto si no se especifica
