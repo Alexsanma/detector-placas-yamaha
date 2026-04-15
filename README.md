@@ -53,31 +53,31 @@ Para un sistema de control de acceso vehicular, la lógica de negocio (clasifica
 
 Esta separación permite cambiar cualquier componente de infraestructura modificando **una sola línea** en el container, sin impactar la lógica de negocio.
 
-### Diagrama de capas
-
-```
-┌────────────────────────────────────────────────────────────┐
-│  INFRASTRUCTURE (adaptadores)                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌─────────────────┐   │
-│  │ FastAPI      │  │ YOLO + OCR   │  │ SQLite / Memory │   │
-│  │ Streamlit    │  │ (Ultralytics)│  │ (SQLAlchemy)    │   │
-│  └──────┬───────┘  └──────┬───────┘  └────────┬────────┘   │
-│         │                 │                    │           │
-├─────────┼─────────────────┼────────────────────┼───────────┤
-│         ▼                 ▼                    ▼           │
-│  APPLICATION (puertos + casos de uso)                      │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  ProcesarDeteccionUseCase                           │   │
-│  │  RegistrarVehiculoUseCase                           │   │
-│  │  ConsultarEventosUseCase                            │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                          │                                 │
-├──────────────────────────┼─────────────────────────────────┤
-│                          ▼                                 │
-│  DOMAIN (entidades + reglas de negocio puras)              │
-│  Vehiculo · Evento · access_rules · excepciones            │
-└────────────────────────────────────────────────────────────┘
-```
+### Capas
+---
+<table>
+  <tr>
+    <th colspan="3" align="center">INFRASTRUCTURE (adaptadores)</th>
+  </tr>
+  <tr>
+    <td align="center">FastAPI · Streamlit</td>
+    <td align="center">YOLO + EasyOCR (Ultralytics)</td>
+    <td align="center">SQLite / Memory (SQLAlchemy)</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="center">APPLICATION (puertos + casos de uso)</th>
+  </tr>
+  <tr>
+    <td colspan="3" align="center">ProcesarDeteccionUseCase · RegistrarVehiculoUseCase · ConsultarEventosUseCase</td>
+  </tr>
+  <tr>
+    <th colspan="3" align="center">DOMAIN (entidades + reglas de negocio puras)</th>
+  </tr>
+  <tr>
+    <td colspan="3" align="center">Vehiculo · Evento · access_rules · excepciones</td>
+  </tr>
+</table>
+---
 
 **Regla de dependencias:** infraestructura depende de aplicación, aplicación depende de dominio. El dominio no depende de nada externo.
 
