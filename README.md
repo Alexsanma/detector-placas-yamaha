@@ -143,32 +143,38 @@ USAR_BASE_DATOS=false  # memoria volátil (útil para tests)
 El container lee esta variable y ensambla los adaptadores correspondientes. Ni el dominio ni los casos de uso se enteran del cambio.
 
 ---
-
 ## Instalación
 
-**Requisitos:** Python 3.11, CUDA 12.1 (opcional, para aceleración GPU).
+**Requisitos previos:**
+- [Git](https://git-scm.com/downloads)
+- [Anaconda](https://www.anaconda.com/download) o [Miniconda](https://docs.conda.io/en/latest/miniconda.html)
 
 ```bash
-# Clonar el repositorio
-git clone <https://github.com/Alexsanma/detector-placas-yamaha.git>
-cd detector_placas
+# 1. Clonar el repositorio
+git clone https://github.com/Alexsanma/detector-placas-yamaha.git
+cd detector-placas-yamaha
 
-# Crear entorno conda
+# 2. Crear entorno conda
 conda create -n detector_placas python=3.11
 conda activate detector_placas
 
-# Instalar PyTorch según tu hardware
+# 3. Instalar PyTorch según tu hardware
 # GPU (CUDA 12.1):
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
 # CPU:
 pip install torch torchvision
 
-# Instalar el resto de dependencias
+# 4. Instalar el resto de dependencias
 pip install -r requirements.txt
+
+# 5. Configurar variables de entorno
+copy .env.example .env        # Windows
+cp .env.example .env          # Mac/Linux
 ```
 
-**Configuración:** copia `.env.example` a `.env` y ajusta los valores si es necesario. Los defaults funcionan sin modificar nada.
+**Nota:** los valores por defecto del `.env` funcionan sin modificar nada para correr el proyecto localmente.
 
+---
 ---
 
 ## Ejecución
